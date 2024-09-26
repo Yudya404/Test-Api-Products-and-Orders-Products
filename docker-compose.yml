@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD= # Kosong karena kita mengizinkan password kosong
+      - DB_NAME=api_db
+
+  db:
+    image: mariadb:11.5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ""  # Biarkan kosong
+      MYSQL_DATABASE: api_db
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes  # Izinkan password kosong
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"  # Memetakan port 8080 di host ke port 80 di dalam container
+    environment:
+      PMA_HOST: db  # Mengarahkan ke layanan database
+      PMA_USER: root
+      PMA_PASSWORD:  # Kosong karena kita mengizinkan password kosong
